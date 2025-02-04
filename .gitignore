@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+downloads/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+.installed.cfg
+
+
+# Nextflow specific
+work/
+.nextflow/
+.nextflow.log*
+trace.txt*
+report.html*
+timeline.html*
+dag.dot*
+
+# Data files
+*.fastq
+*.fq
+*.bam
+*.sam
+*.h5
+*.h5ad
+*.rds
+*.csv
+*.tsv
+*.gz
+*.zip
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+.python-version
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log #scattered logs
+
+# Temporary files
+tmp/
+temp/
+
+# Docker
+.docker/
