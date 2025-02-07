@@ -1,0 +1,1 @@
+#Completes QC by parsing fastQC reports, calculating additional metrics, and generting plots.
