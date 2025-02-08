@@ -22,5 +22,5 @@ Ensure the following are installed:
 
 ### **Clone the Repository**  
 ```bash
-git clone https://github.com/brian-rap/scRNAseq-pipeline.git
+git clone https://github.com/brian-rao/scRNAseq-pipeline.git
 cd scRNAseq-pipeline
