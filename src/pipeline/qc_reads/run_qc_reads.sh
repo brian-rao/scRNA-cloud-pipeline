@@ -48,17 +48,12 @@ if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir -p "$OUTPUT_DIR"
 fi
 
-
-
-
-
-
 ################    ANALYSIS    ################
 
-echo "🚀 Running FastQC..."
+echo "Running FastQC..."
 "${FASTQC_DIR}" -t 4 -o "$OUTPUT_DIR" "$INPUT_DIR"/*.fastq
 
-echo "📊 Running additional Python calculations..."
+echo "Running additional Python calculations..."
 
 #activating and deactivating the conda env will not be necessary inside the docker container - develop plots inside conda env locally then add reqs to image
 source ~/miniconda3/etc/profile.d/conda.sh #ensures conda commands are available
@@ -66,4 +61,4 @@ conda activate plot_qc_reads
 
 python "$SCRIPT_DIR/qc_reads.py" #placeholder print statement
 
-echo "✅ FastQC & analysis completed! Results in $OUTPUT_DIR"
+echo "FastQC & analysis completed! Results in $OUTPUT_DIR"
