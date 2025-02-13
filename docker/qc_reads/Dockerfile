@@ -17,13 +17,15 @@ RUN pip install --no-cache-dir \
     matplotlib \
     seaborn
 
-# Create a working directory
+# Create a directory structure
 WORKDIR /app
+RUN mkdir -p /scripts
 
 # Get pipeline scripts
-COPY src/pipeline/qc_reads/run_qc_reads.sh /app
-COPY src/pipeline/qc_reads/qc_reads.py /app
-COPY docker/qc_reads/check_versions.sh /app
+COPY src/pipeline/qc_reads/run_qc_reads.sh scripts/
+RUN chmod +x scripts/run_qc_reads.sh
+COPY src/pipeline/qc_reads/qc_reads.py scripts/
+COPY docker/qc_reads/check_versions.sh scripts/
 
 #Get test files
 COPY docker/qc_reads/test_data test_data
