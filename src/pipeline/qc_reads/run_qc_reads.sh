@@ -68,27 +68,47 @@ if ! ls "$INPUT_DIR"/*.fastq 1> /dev/null 2>&1; then
     exit 1
 fi
 
-# Ensure the output directory exists, or create it
-if [ ! -d "$OUTPUT_DIR" ]; then
-    echo "Output directory does not exist. Creating: $OUTPUT_DIR"
-    mkdir -p "$OUTPUT_DIR"
-fi
+# Track processed samples to avoid duplicates
+declare -A processed_fastqs
+
+# Organize input files by sample
+for fastq in "$INPUT_DIR"/*.fastq; do
+    # Sed pattern to handle common formats:
+    # Get filename without path
+    file_name=$(basename "$fastq") 
+    sample_name=$(echo "$file_name" | sed -E 's/_(R)?[12]\.fastq$|\.([12]|R[12])\.fastq$|_S[0-9]+_L[0-9]+_R[12]_[0-9]+\.fastq$//')
+    echo "Extracted sample name: $sample_name"
+    
+    if [ "${processed_fastqs[$file_name]}" ]; then
+        continue
+    fi
+    
+    processed_fastqs[$file_name]=1
+    
+    # Create output structure
+    sample_output_dir="$OUTPUT_DIR/${sample_name}_output/fastqc"
+    mkdir -p "$sample_output_dir"
+done
 
 ################    ANALYSIS    ################
 
-echo "Running FastQC..."
-"${FASTQC_CMD}" -t 4 -o "$OUTPUT_DIR" "$INPUT_DIR"/*.fastq
+for file_name in "${!processed_fastqs[@]}"; do
+    echo "Running FastQC on $file_name..."
+    sample_output_dir="$OUTPUT_DIR/${sample_name}_output/fastqc"
 
-echo "Running additional Python calculations..."
+    fastqc -t 4 -o "$sample_output_dir" "$INPUT_DIR/$file_name"
 
-#activating and deactivating the conda env will not be necessary inside the docker container - develop plots inside conda env locally then add reqs to image
+
+    echo "Running additional Python calculations..."
+
+
 #use conda dir for local testing, if in container python should be accessible from PATH
-if [ -n "$CONDA_DIR" ]; then
-    PYTHON_CMD="source $CONDA_DIR conda activate $CONDA_ENV"
-else
-    PYTHON_CMD="python"  # Use system PATH in container
-fi
+    if [ -n "$CONDA_DIR" ]; then
+        source "$CONDA_DIR/etc/profile.d/conda.sh"
+        conda activate "$CONDA_ENV"
+    fi
 
-python "$SCRIPT_DIR/qc_reads.py" #placeholder print statement
+    python "$SCRIPT_DIR/qc_reads.py"
 
-echo "FastQC & analysis completed! Results in $OUTPUT_DIR"
+    echo "FastQC & analysis on $sample_name completed! Results in $sample_output_dir"
+done
