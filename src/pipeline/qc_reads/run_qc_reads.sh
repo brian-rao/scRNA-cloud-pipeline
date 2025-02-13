@@ -5,6 +5,20 @@ set -e  # Stop on error
 
 SCRIPT_DIR="$(dirname "$0")"
 
+################    HELP MESSAGE    ################
+usage() {
+    echo "Usage: $0 [-i input_dir] [-o output_dir] [-h]"
+    echo
+    echo "Options:"
+    echo "  -i    Input directory containing .fastq files"
+    echo "  -o    Output directory for analysis results"
+    echo "  -h    Display this help message"
+    echo
+    echo "Environment variables can also be set in .env file:"
+    echo "  INPUT_DIR   Same as -i"
+    echo "  OUTPUT_DIR  Same as -o"
+    exit 1
+}
 
 ################    INPUT HANDLING    ################
 
@@ -14,13 +28,25 @@ ENV_FILE="$SCRIPT_DIR/.env"
 # Load .env file if it exists
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
-else
-    echo "Warning: .env file not found in $SCRIPT_DIR. Running without defaults."
 fi
 
+#use FastQC dir for local testing, if in container it should be accessible from PATH
+if [ -n "$FASTQC_DIR" ]; then
+    FASTQC_CMD="$FASTQC_DIR"
+else
+    FASTQC_CMD="fastqc"  # Use system PATH in container
+fi
+
+
 # Allow command-line arguments to override .env values
-INPUT_DIR="${1:-$INPUT_DIR}"
-OUTPUT_DIR="${2:-$OUTPUT_DIR}"
+while getopts "i:o:h" flag; do
+    case "${flag}" in
+        i) INPUT_DIR=${OPTARG};;
+        o) OUTPUT_DIR=${OPTARG};;
+        h) usage;;
+        *) usage;;
+    esac
+done
 
 # Validate that required variables are set
 if [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
@@ -51,13 +77,17 @@ fi
 ################    ANALYSIS    ################
 
 echo "Running FastQC..."
-"${FASTQC_DIR}" -t 4 -o "$OUTPUT_DIR" "$INPUT_DIR"/*.fastq
+"${FASTQC_CMD}" -t 4 -o "$OUTPUT_DIR" "$INPUT_DIR"/*.fastq
 
 echo "Running additional Python calculations..."
 
 #activating and deactivating the conda env will not be necessary inside the docker container - develop plots inside conda env locally then add reqs to image
-source ~/miniconda3/etc/profile.d/conda.sh #ensures conda commands are available
-conda activate plot_qc_reads
+#use conda dir for local testing, if in container python should be accessible from PATH
+if [ -n "$CONDA_DIR" ]; then
+    PYTHON_CMD="source $CONDA_DIR conda activate $CONDA_ENV"
+else
+    PYTHON_CMD="python"  # Use system PATH in container
+fi
 
 python "$SCRIPT_DIR/qc_reads.py" #placeholder print statement
 

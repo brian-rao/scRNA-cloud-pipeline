@@ -29,7 +29,7 @@ COPY docker/qc_reads/check_versions.sh /app
 COPY docker/qc_reads/test_data test_data
 
 #Get .env for testing
-COPY src/pipeline/qc_reads/.env /app
+#COPY src/pipeline/qc_reads/.env /app
 
 # Verify installations
 RUN python --version && \
