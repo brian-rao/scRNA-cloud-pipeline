@@ -38,7 +38,7 @@ dag.dot*
 *.gz
 *.zip
 
-docker/quantification/test_data/*
+docker/quantification/resources/10xv3_whitelist.txt
 
 
 # Environment
