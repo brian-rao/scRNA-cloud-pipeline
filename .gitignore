@@ -38,6 +38,9 @@ dag.dot*
 *.gz
 *.zip
 
+docker/quantification/resources/10xv3_whitelist.txt
+
+
 # Environment
 .env
 .venv
