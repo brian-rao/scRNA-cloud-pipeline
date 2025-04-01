@@ -38,6 +38,9 @@ dag.dot*
 *.gz
 *.zip
 
+docker/quantification/test_data/*
+
+
 # Environment
 .env
 .venv

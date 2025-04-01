@@ -58,6 +58,10 @@ RUN mkdir -p scripts
 
 # Copy your scripts
 COPY src/pipeline/quantification/run_build_references.sh scripts/
+COPY src/pipeline/quantification/run_quantification.sh scripts/
+
+# Copy the whitelist - 10xV3 - Feb 2018
+COPY docker/quantification/resources/10xv3_whitelist.txt .
 
 #Get .env for testing
 COPY src/pipeline/quantification/.env /app
