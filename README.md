@@ -24,3 +24,27 @@ Ensure the following are installed:
 ```bash
 git clone https://github.com/brian-rao/scRNAseq-pipeline.git
 cd scRNAseq-pipeline
+
+### **Get the whitelist**  
+
+
+### **Set up your environmental variables**
+# AWS Credentials
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=your_preferred_region
+
+# Nextflow AWS Batch Configuration
+NXF_EXECUTOR=awsbatch
+NXF_MODE=aws
+NXF_AWS_REGION=your_preferred_region
+NXF_JOB_QUEUE=your_batch_job_queue_name
+
+# Docker Configuration
+NXF_DOCKER_RUNOPTIONS="-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_REGION"
+
+# Optional: S3 Work Directory
+NXF_WORK=s3://your-bucket-name/work-dir
+
+# Optional: AWS Batch CLI Path (if not in PATH)
+# NXF_AWSCLI=/path/to/aws

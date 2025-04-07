@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages
-RUN pip install --no-cache-dir \
-    numpy \
-    pandas \
-    matplotlib \
-    seaborn
+#RUN pip install --no-cache-dir \
+#    numpy \
+#    pandas \
+#    matplotlib \
+#    seaborn
 
 # Create a directory structure
 WORKDIR /app
@@ -34,11 +34,11 @@ COPY docker/qc_reads/test_data test_data
 #COPY src/pipeline/qc_reads/.env /app
 
 # Verify installations
-RUN python --version && \
-python -c "import numpy; print(numpy.__version__)" && \
-python -c "import matplotlib; print(matplotlib.__version__)" && \
-python -c "import seaborn; print(seaborn.__version__)" && \
-fastqc --version
+#RUN python --version && \
+#python -c "import numpy; print(numpy.__version__)" && \
+#python -c "import matplotlib; print(matplotlib.__version__)" && \
+#python -c "import seaborn; print(seaborn.__version__)" && \
+RUN fastqc --version
 
 # Set default command to bash
 CMD ["/bin/bash"]
