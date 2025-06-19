@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e  # Stop on error
-
-
+#Stop on error
+set -e 
 
 SCRIPT_DIR="$(dirname "$0")"
 
@@ -23,20 +22,24 @@ usage() {
 ################    INPUT HANDLING    ################
 
 #use .env for development
-ENV_FILE="$SCRIPT_DIR/.env"
+#ENV_FILE="$SCRIPT_DIR/.env"
 
 # Load .env file if it exists
-if [ -f "$ENV_FILE" ]; then
-    source "$ENV_FILE"
-fi
+#if [ -f "$ENV_FILE" ]; then
+#    source "$ENV_FILE"
+#    echo "Using .env file!"
+#fi
 
-#use FastQC dir for local testing, if in container it should be accessible from PATH
-if [ -n "$FASTQC_DIR" ]; then
-    FASTQC_CMD="$FASTQC_DIR"
-else
-    FASTQC_CMD="fastqc"  # Use system PATH in container
-fi
+#use FastQC dir for local usage, if in container, "fastqc" is accessible from PATH
+#if [ -n "$FASTQC_DIR" ]; then
+#    FASTQC_CMD="$FASTQC_DIR"
+#else
+#    FASTQC_CMD="fastqc"  # Use system PATH in container
+#fi
 
+#the above was only necessary in dev, IAM role handle cred, and fastqc is available in path 
+
+FASTQC_CMD="fastqc"
 
 # Allow command-line arguments to override .env values
 while getopts "i:o:h" flag; do

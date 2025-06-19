@@ -54,14 +54,19 @@ fi
 S3_BUCKET=${S3_BUCKET%/}
 
 
-# Set AWS credentials
-aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" 
-aws configure set default.region "$AWS_DEFAULT_REGION"
+# Set AWS credentials - let IAM credentials be used in batch
+#aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+#aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" 
+#aws configure set default.region "$AWS_DEFAULT_REGION"
 
 
-# Test the connection
-aws s3 ls $S3_BUCKET
+# Test the connection to the S3 bucket using the inherited IAM role
+echo "Testing S3 connection to $S3_BUCKET..."
+aws s3 ls "$S3_BUCKET" || {
+    echo "ERROR: Failed to list S3 bucket contents. Check S3 bucket name and IAM permissions."
+    exit 1
+}
+echo "S3 connection test successful."
 
 # Define standard paths
 REF_DIR="kallisto_reference"
