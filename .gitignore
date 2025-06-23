@@ -64,4 +64,4 @@ tmp/
 temp/
 
 # Docker
-.docker/
+.docker/docker/quantification/resources/10xv3_whitelist.txt
